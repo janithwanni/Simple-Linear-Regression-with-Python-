@@ -22,17 +22,17 @@ class LinRegBrainWeight:
         #optional print suppressor turn off when needed
         #np.set_printoptions(precision=4,suppress=True)
         print("Cost with theta set to 0",self.calculateCost(theta,0))
-        theta = self.optimizeTheta(theta,0.0001,0,200)
+        theta = self.optimizeTheta(theta,0.000001,0,200)
         print("Theta found after 200 Iterations and lamda as 0\n",theta)
         print("Cost with optimized theta and lamda set to 0",self.calculateCost(theta,0))
         #self.plotCurve(theta)
         theta2 = self.normalEquation(theta,0)
         print("Theta found with normal equation\n",theta2)
         print("Cost with theta found from normalequation",self.calculateCost(theta2,0))
-        self.plotCurve(theta2)
+        self.plotCurve(theta)
     def calculateCost(self,theta,lamda):
         #added lambda as well for the regularization
-        print("cost")
+        #print("cost")
         h = self.X * theta;
         res = h - self.Y;
         J = np.sum(np.power(res,2))/ (2 * len(self.X))
@@ -46,8 +46,11 @@ class LinRegBrainWeight:
         hm = h - self.Y
         grad = Xt * hm
         grad *= (alpha /len(self.X))
+        prevCost = self.calculateCost(theta,lamda)
         for i in range(1,numOfIter):
             theta = theta - grad
+            if(self.calculateCost(theta,lamda) > prevCost):
+                break
         return theta    
     def normalEquation(self,theta,lamda):
         print("Normal method")
